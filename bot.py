@@ -6,6 +6,7 @@ import discord
 from setup_game_command import setup_game
 from logs_command import setup_logs
 import help_command
+import random
 
 # Cargar variables de entorno desde el archivo .env en el root
 load_dotenv()
@@ -409,4 +410,7 @@ async def on_raw_reaction_remove(payload):
             except Exception as e:
                 print(f"Error al remover rol por quitar reacción: {e}")
 
-client.run(TOKEN)
+@tree.command(name="dados", description="Tira un número al azar del 1 al 100")
+async def dados(interaction: discord.Interaction):
+    numero = random.randint(1, 100)
+    await interaction.response.send_message(f"🎲 Has sacado un {numero} en el dado.")
