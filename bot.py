@@ -254,7 +254,7 @@ def extraer_emoji(texto):
 
 @tree.command(name='crear_roles', description='Crear roles de juegos con emojis y configurar reacciones para asignarlos')
 async def crear_roles(interaction: discord.Interaction):
-    print(f"Comando 'crear_roles' ejecutado por usuario {interaction.user}")
+    print(f"Comando 'crear_roles' realizado por usuario {interaction.user}")
     await interaction.response.defer(ephemeral=True)
     guild = interaction.guild
 
