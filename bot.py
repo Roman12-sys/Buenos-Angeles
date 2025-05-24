@@ -22,7 +22,8 @@ COGS = [
     "cogs.verification",
     "cogs.dados",
     "cogs.info",
-    "cogs.tickets"
+    "cogs.tickets",
+    "cogs.levels"
 ]
 
 # Animación de carga amigable
