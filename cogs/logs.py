@@ -54,7 +54,27 @@ class Logs(commands.Cog):
         embed.add_field(name="Canal", value=message.channel.mention, inline=True)
         embed.add_field(name="Contenido", value=message.content or "No disponible", inline=False)
         embed.set_footer(text=f"ID del mensaje: {message.id}")
-        await self.log_channel.send(embed=embed)
+        try:
+            await self.log_channel.send(embed=embed)
+        except Exception as e:
+            print(f"Error enviando log de mensaje eliminado: {e}")
+
+    @commands.Cog.listener()
+    async def on_message_edit(self, before, after):
+        if before.guild is None or self.log_channel is None:
+            return
+        if before.content == after.content:
+            return
+        embed = discord.Embed(title="Mensaje editado", color=discord.Color.orange(), timestamp=datetime.utcnow())
+        embed.add_field(name="Autor", value=before.author.mention, inline=True)
+        embed.add_field(name="Canal", value=before.channel.mention, inline=True)
+        embed.add_field(name="Antes", value=before.content or "No disponible", inline=False)
+        embed.add_field(name="Después", value=after.content or "No disponible", inline=False)
+        embed.set_footer(text=f"ID del mensaje: {before.id}")
+        try:
+            await self.log_channel.send(embed=embed)
+        except Exception as e:
+            print(f"Error enviando log de mensaje editado: {e}")
 
     @commands.Cog.listener()
     async def on_voice_state_update(self, member, before, after):
@@ -76,7 +96,10 @@ class Logs(commands.Cog):
             embed.description = f"{user.mention} se movió de {before.channel.mention} a {after.channel.mention}"
         else:
             return
-        await self.log_channel.send(embed=embed)
+        try:
+            await self.log_channel.send(embed=embed)
+        except Exception as e:
+            print(f"Error enviando log de estado de voz: {e}")
 
     @commands.Cog.listener()
     async def on_member_join(self, member):
@@ -85,7 +108,10 @@ class Logs(commands.Cog):
         embed = discord.Embed(title="Usuario entró al servidor", color=discord.Color.green(), timestamp=datetime.utcnow())
         embed.set_author(name=str(member), icon_url=member.display_avatar.url)
         embed.description = f"{member.mention} ha entrado al servidor."
-        await self.log_channel.send(embed=embed)
+        try:
+            await self.log_channel.send(embed=embed)
+        except Exception as e:
+            print(f"Error enviando log de entrada de miembro: {e}")
         await self.update_status()
 
     @commands.Cog.listener()
@@ -95,7 +121,10 @@ class Logs(commands.Cog):
         embed = discord.Embed(title="Usuario salió del servidor", color=discord.Color.orange(), timestamp=datetime.utcnow())
         embed.set_author(name=str(member), icon_url=member.display_avatar.url)
         embed.description = f"{member.mention} ha salido del servidor."
-        await self.log_channel.send(embed=embed)
+        try:
+            await self.log_channel.send(embed=embed)
+        except Exception as e:
+            print(f"Error enviando log de salida de miembro: {e}")
         await self.update_status()
 
     async def update_status(self):

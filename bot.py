@@ -20,7 +20,9 @@ COGS = [
     "cogs.games",
     "cogs.admin",
     "cogs.verification",
-    "cogs.dados"
+    "cogs.dados",
+    "cogs.info",
+    "cogs.tickets"
 ]
 
 # Animación de carga amigable
@@ -41,14 +43,6 @@ async def load_cogs():
         except Exception as e:
             print(f"❌ Error al cargar {cog}: {e}")
 
-@bot.event
-async def on_ready():
-    print(f"🟢 Sesión iniciada como: {bot.user.name}#{bot.user.discriminator}")
-
-async def main():
-    await loading_animation()
-    await load_cogs()
-    await bot.start(TOKEN)
 @bot.event
 async def on_ready():
     print(f'✅ Bot conectado como {bot.user}')
@@ -76,8 +70,10 @@ async def status_task():
         i += 1
         await asyncio.sleep(15)
 
+async def main():
+    await loading_animation()
+    await load_cogs()
+    await bot.start(TOKEN)
+
 if __name__ == "__main__":
-    async def main():
-        await load_cogs()
-        await bot.start(TOKEN)
     asyncio.run(main())
