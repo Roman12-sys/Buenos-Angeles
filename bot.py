@@ -266,7 +266,6 @@ async def crear_roles(interaction: discord.Interaction):
         "R.E.P.O": "🚓",
         "Minecraft": "⛏️"
     }
-#hola tito :3
 
     for nombre in roles_emojis.keys():
         rol_existente = discord.utils.get(guild.roles, name=nombre)
