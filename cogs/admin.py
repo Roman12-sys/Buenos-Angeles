@@ -122,6 +122,7 @@ class Admin(commands.Cog):
             "R.E.P.O": "🚓",
             "Minecraft": "⛏️"
         }
+        mensajes_confirmacion = []
         for nombre in roles_emojis.keys():
             rol_existente = discord.utils.get(guild.roles, name=nombre)
             if rol_existente:
@@ -134,8 +135,9 @@ class Admin(commands.Cog):
             try:
                 rol_creado = await guild.create_role(name=nombre, mentionable=True)
                 roles_creados[emoji] = rol_creado.id
+                mensajes_confirmacion.append(f"✅ Rol '{nombre}' creado correctamente.")
             except Exception:
-                pass
+                mensajes_confirmacion.append(f"⚠️ No se pudo crear el rol '{nombre}'.")
         mensaje = "🎮 **Roles disponibles:**\n"
         for nombre, emoji in roles_emojis.items():
             mensaje += f"{emoji} - {nombre}\n"
@@ -147,7 +149,8 @@ class Admin(commands.Cog):
                 pass
         self.verificacion_roles_msg_id = msg.id
         self.emoji_rol_map = roles_creados
-        await interaction.followup.send("✅ Roles creados y mensaje de reacciones configurado.", ephemeral=True)
+        # Mensaje de confirmación sólo para el usuario
+        await interaction.followup.send("\n".join(mensajes_confirmacion) + "\n✅ Roles creados y mensaje de reacciones configurado.", ephemeral=True)
 
     @app_commands.command(name='borrar_roles', description='Borrar roles relacionados a videojuegos separados por comas')
     async def borrar_roles(self, interaction: discord.Interaction, roles: str):
