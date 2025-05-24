@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 import discord
 from discord.ext import commands
 import asyncio
+import sys
 
 # Cargar variables de entorno desde el archivo .env en el root
 load_dotenv()
@@ -22,6 +23,16 @@ COGS = [
     "cogs.dados"
 ]
 
+# Animación de carga amigable
+async def loading_animation(text="Iniciando el bot", symbol="🤖", delay=0.5, duration=5):
+    end_time = asyncio.get_event_loop().time() + duration
+    while asyncio.get_event_loop().time() < end_time:
+        for dots in range(4):
+            sys.stdout.write(f"\r{symbol} {text}{'.' * dots}   ")
+            sys.stdout.flush()
+            await asyncio.sleep(delay)
+    print("\n🤖 ¡Listo! El bot está en línea y preparado para ayudarte.\n")
+
 async def load_cogs():
     for cog in COGS:
         try:
@@ -30,6 +41,14 @@ async def load_cogs():
         except Exception as e:
             print(f"❌ Error al cargar {cog}: {e}")
 
+@bot.event
+async def on_ready():
+    print(f"🟢 Sesión iniciada como: {bot.user.name}#{bot.user.discriminator}")
+
+async def main():
+    await loading_animation()
+    await load_cogs()
+    await bot.start(TOKEN)
 @bot.event
 async def on_ready():
     print(f'✅ Bot conectado como {bot.user}')
