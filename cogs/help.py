@@ -13,32 +13,23 @@ class Help(commands.Cog):
 
         for command in self.bot.tree.walk_commands():
             if command.description:
-                # Check if command requires administrator permission
-                is_admin = False
-                for check in command.checks:
-                    if hasattr(check, "__name__") and check.__name__ == "has_permissions":
-                        if hasattr(check, "__closure__") and check.__closure__:
-                            for cell in check.__closure__:
-                                perm = cell.cell_contents
-                                if isinstance(perm, dict) and perm.get("administrator", False):
-                                    is_admin = True
-                                    break
-                    if is_admin:
-                        break
+                is_admin = bool(command.checks)  # If has checks, it's admin
                 if is_admin:
-                    admin_commands.append(f"**/{command.name}**: {command.description}")
+                    admin_commands.append(f"• /{command.name}: {command.description}")
                 else:
-                    user_commands.append(f"**/{command.name}**: {command.description}")
+                    user_commands.append(f"• /{command.name}: {command.description}")
 
-        embed = discord.Embed(title="Lista de comandos disponibles", color=discord.Color.blue())
+        embed = discord.Embed(title="📖 Lista de comandos disponibles", color=discord.Color.blue())
         if user_commands:
-            embed.add_field(name="Comandos para usuarios", value="\n".join(user_commands), inline=False)
+            embed.add_field(name="👤 Comandos para usuarios", value="\n".join(user_commands), inline=False)
         else:
-            embed.add_field(name="Comandos para usuarios", value="No hay comandos disponibles.", inline=False)
+            embed.add_field(name="👤 Comandos para usuarios", value="No hay comandos disponibles.", inline=False)
         if admin_commands:
-            embed.add_field(name="Comandos para administradores", value="\n".join(admin_commands), inline=False)
+            embed.add_field(name="🛠️ Comandos para administradores", value="\n".join(admin_commands), inline=False)
         else:
-            embed.add_field(name="Comandos para administradores", value="No hay comandos disponibles.", inline=False)
+            embed.add_field(name="🛠️ Comandos para administradores", value="No existen aún.", inline=False)
+
+        embed.set_footer(text=f"Solicitado por {interaction.user}", icon_url=interaction.user.avatar.url if interaction.user.avatar else None)
 
         await interaction.response.send_message(embed=embed, ephemeral=True)
 
